@@ -83,9 +83,11 @@ public class TennisGame {
 			if (player1Points >= 4 && player1Points - player2Points == 1)
 				return "player1 has advantage";
 			
-			if (player2Points > 4 && player2Points - player1Points == 1)
-				return "player2 has advantage";							
+			if (player2Points >= 4 && player2Points - player1Points == 1)
+				return "player2 has advantage";			
+			//added "=" to row 86 before the number 4 it was "player2Points > 4 && player2Points"
 			
-			return  player2Score + " - " + player1Score ;
+			return  player1Score + " - " + player2Score ;
+			// switched player1score and player2score places. player 1 score was on the left now on the right and vice versa.
 	}
 }
