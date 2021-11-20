@@ -1,10 +1,58 @@
-import static org.junit.Assert.*;
+// This implementation is used for practicing unit tests. 
+// NOTE THAT it may contain bugs
+// Write unit tests in TennisGameTest.java and try to find the errors in the code
 
-import org.junit.Test;
-
-public class TennisGameTest {
+public class TennisGame {
+	private int player1Points;
+	private int player2Points;
 	
-// Here is the format of the scores: "player1Score - player2Score"
+	private boolean gameEnded;
+	
+	public TennisGame() {
+		player1Points = 0;
+		player2Points = 0;
+		gameEnded = false ;
+	}
+	
+	private void checkGameEnded() {
+		if (player1Points>=4 && player1Points-player2Points>=2)
+			gameEnded = true;
+		else if (player2Points>=4 && player2Points-player1Points>=2)
+			gameEnded = true;
+	}
+	
+	private String getScore(int points) {
+		switch (points)	{
+		case 0: return "love";
+		case 1: return "15" ;
+		case 2: return "30" ;
+		case 3: return "40";
+		default: return "40" ;
+		} 		
+	}
+	
+	public void player1Scored() throws TennisGameException {
+		if (gameEnded) {
+			throw new TennisGameException();
+		}
+		else {
+			player1Points++;
+			checkGameEnded();
+		}			
+	}
+	
+	public void player2Scored() throws TennisGameException {
+		if (gameEnded) {
+			throw new TennisGameException();
+		}
+		else {
+			player2Points++;
+			checkGameEnded();
+		}			
+	}
+	
+	public String getScore() {
+// Here is the format of the scores:
 // "love - love"
 // "15 - 15"
 // "30 - 30"
@@ -18,48 +66,28 @@ public class TennisGameTest {
 // "player2 has advantage"
 // "player1 wins"
 // "player2 wins"
-	@Test
-	public void testTennisGame_Start() {
-		//Arrange
-		TennisGame game = new TennisGame();
-		//Act
-		String score = game.getScore() ;
-		// Assert
-		assertEquals("Initial score incorrect", "love - love", score);		
+		
+			String player1Score = getScore(player1Points);
+			String player2Score = getScore(player2Points);
+			
+			if (gameEnded) {
+				if (player1Points > player2Points)
+					return "player1 wins";
+				else
+					return "player2 wins";
+			}
+			
+			if (player1Points >= 4 && player1Points == player2Points)
+				return "deuce";
+			
+			if (player1Points >= 4 && player1Points - player2Points == 1)
+				return "player1 has advantage";
+			
+			if (player2Points >= 4 && player2Points - player1Points == 1)
+				return "player2 has advantage";			
+			//added "=" to row 86 before the number 4 it was "player2Points > 4 && player2Points"
+			
+			return  player1Score + " - " + player2Score ;
+			// switched player1score and player2score places. player 1 score was on the left now on the right and vice versa.
 	}
-	
-	@Test
-	public void testTennisGame_EahcPlayerWin4Points_Score_Deuce() throws TennisGameException {
-		//Arrange
-		TennisGame game = new TennisGame();
-		
-		game.player1Scored();
-		game.player1Scored();
-		game.player1Scored();
-		
-		game.player2Scored();
-		game.player2Scored();
-		game.player2Scored();
-		
-		game.player1Scored();
-		game.player2Scored();
-		//Act
-		String score = game.getScore() ;
-		// Assert
-		assertEquals("Tie score incorrect", "deuce", score);		
-	}
-	
-	@Test (expected = TennisGameException.class)
-	public void testTennisGame_Player1WinsPointAfterGameEnded_ResultsException() throws TennisGameException {
-		//Arrange
-		TennisGame game = new TennisGame();
-		//Act
-		game.player1Scored();
-		game.player1Scored();
-		game.player1Scored();
-		game.player1Scored();
-		//Act
-		// This statement should cause an exception
-		game.player1Scored();			
-	}		
 }
